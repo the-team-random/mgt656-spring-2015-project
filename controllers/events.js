@@ -74,11 +74,26 @@ function saveEvent(request, response){
     contextData.errors.push('Your title should be between 5 and 100 letters.');
   }
   
-  
   var year = checkIntRange(request, 'year', 2015, 2016, contextData);
   var month = checkIntRange(request, 'month', 0, 11, contextData);
   var day = checkIntRange(request, 'day', 1, 31, contextData);
   var hour = checkIntRange(request, 'hour', 0, 23, contextData);
+  
+  if (validator.isURL(request.body.image) === false) {
+    contextData.errors.push('Your image needs to be a URL');
+  }
+
+  if (validator.isURL(request.body.image = /\.(png|gif)$/) === false) {
+    contextData.errors.push('Your image needs to be a gif or png');
+  }
+  
+  if (validator.isLength(request.body.location, 0, 50) === false) {
+    contextData.errors.push('Your location is too long');
+  }
+  
+  if (validator.isNull(request.body.location) === true) {
+    contextData.errors.push('Your need to have a location');
+  }
 
   if (contextData.errors.length === 0) {
     var newEvent = {
