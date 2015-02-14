@@ -83,7 +83,7 @@ function saveEvent(request, response){
     contextData.errors.push('Your image needs to be a URL');
   }
 
-  if (validator.isURL(request.body.image = /\.(png|gif)$/) === false) {
+  if (request.body.image.match(/\.(png|gif)$/) === null) {
     contextData.errors.push('Your image needs to be a gif or png');
   }
   
