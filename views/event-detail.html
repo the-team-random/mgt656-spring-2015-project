@@ -1,14 +1,20 @@
 {% extends "layout.html" %}
 {% block header %}
 <header>
-    <h1>{{event.title}}</h1>
+    <h1 id="title">{{event.title}}</h1>
 </header>
 {% endblock %}
 {% block mainContent %}
 <img id="image" src="{{event.image}}"/>
-<p>Date: <time>{{event.date|prettyDate}}</time></p>
-<p>Location: {{event.location}}</p>
-<p>Attendees: {{event.attending.length}} so far.</p>
+<p>Date: <span id="date">{{event.date|prettyDate}}</span></p>
+<p>Location: <span id="location">{{event.location}}</span></p>
+<p>Attendees: <span id="attendees">{{event.attending.length}} so far.</span></p>
+<p>List of names:</p>
+<ul id="attendees">
+    {% for person in event.attending %}
+    <li>{{person}}</li>
+    {% endfor %}
+</ul>
 
 {% if errors %} 
      <div> 

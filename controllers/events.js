@@ -128,7 +128,7 @@ function saveEvent(request, response){
 function eventDetail (request, response) {
   var ev = events.getById(parseInt(request.params.id));
   if (ev === null) {
-    response.status(404).send('No such event');
+    response.status(404).send('The event does not exist!');
   }
   response.render('event-detail.html', {event: ev});
 }
