@@ -9,4 +9,24 @@
 <p>Date: <time>{{event.date|prettyDate}}</time></p>
 <p>Location: {{event.location}}</p>
 <p>Attendees: {{event.attending.length}} so far.</p>
+
+{% if errors %} 
+     <div> 
+       <h3>Please correct the following errors!</h3> 
+       <ul class="form-errors"> 
+         {% for error in errors %} 
+           <li>{{error}}</li> 
+         {% endfor %} 
+       </ul> 
+     </div> 
+   {% endif %} 
+
+<div class="rspv">
+  <p>If you want to join (only Yale addresses), reserve below:</p>
+  <form id="reservation" method="POST">
+    <label for="email">Email:</label>
+    <input type="text" name="email">
+   <button>Reserve!</button>
+  </form>
+</div>
 {% endblock %}
