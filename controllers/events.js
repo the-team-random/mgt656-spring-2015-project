@@ -62,6 +62,19 @@ function checkIntRange(request, fieldName, minVal, maxVal, contextData){
   return value;
 }
 
+function getMaxId(){
+  var maxId = 0;
+  var allEvents = events.all;
+  for (var i = allEvents.length - 1; i >= 0; i--){
+    if (maxId < allEvents[i].id){
+      maxId = allEvents[i].id;
+    }
+  }
+  maxId++;
+  return maxId;
+}
+
+
 /**
  * Controller to which new events are submitted.
  * Validates the form and adds the new event to
@@ -83,7 +96,7 @@ function saveEvent(request, response){
     contextData.errors.push('Your image needs to be a URL');
   }
 
-  if (validator.isURL(request.body.image = /\.(png|gif)$/) === false) {
+  if (request.body.image.match(/\.(png|gif)$/) === null) {
     contextData.errors.push('Your image needs to be a gif or png');
   }
   
@@ -96,7 +109,9 @@ function saveEvent(request, response){
   }
 
   if (contextData.errors.length === 0) {
+    var newEventId = getMaxId();
     var newEvent = {
+      id: newEventId,
       title: request.body.title,
       location: request.body.location,
       image: request.body.image,
@@ -104,7 +119,7 @@ function saveEvent(request, response){
       attending: []
     };
     events.all.push(newEvent);
-    response.redirect('/events');
+    response.redirect('/events/'+ newEventId);
   }else{
     response.render('create-event.html', contextData);
   }
@@ -113,7 +128,7 @@ function saveEvent(request, response){
 function eventDetail (request, response) {
   var ev = events.getById(parseInt(request.params.id));
   if (ev === null) {
-    response.status(404).send('No such event');
+    response.status(404).send('The event does not exist!');
   }
   response.render('event-detail.html', {event: ev});
 }
@@ -124,16 +139,16 @@ function rsvp (request, response){
     response.status(404).send('No such event');
   }
 
-  if(validator.isEmail(request.body.email)){
+  if(validator.isEmail(request.body.email) && request.body.email.toLowerCase().indexOf('yale.edu')!==-1){
     ev.attending.push(request.body.email);
     response.redirect('/events/' + ev.id);
-  }else{
+  }else{  
     var contextData = {errors: [], event: ev};
-    contextData.errors.push('Invalid email');
+    contextData.errors.push('Please provide a valid email');
     response.render('event-detail.html', contextData);    
   }
-
 }
+
 
 function api(request, response){
   var output = {events: []};
